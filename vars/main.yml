@@ -1,8 +1,9 @@
 # vars file
 ---
+
 rstudio_dependencies:
   - curl
-rstudio_downloads_path: /var/lib/ansible/rstudio/downloads
+rstudio_downloads_path: '{{ms_installation_local_files_dir}}/rstudio'
 rstudio_machine_map:
   i686: i386
   i386: i386

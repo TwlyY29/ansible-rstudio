@@ -1,0 +1,38 @@
+# tasks file
+---
+- name: include variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "_{{ ansible_distribution_release }}.yml"
+    - "_{{ ansible_distribution | lower }}.yml"
+    - _default.yml
+  tags:
+    - configuration
+    - rstudio
+    - rstudio-include-variables
+
+- include: install.yml
+  tags:
+    - configuration
+    - rstudio
+    - rstudio-install
+
+- name: install | create user bin directory
+  file:
+    path: "{{ansible_env.HOME}}/bin"
+    state: directory
+    mode: 0755
+
+- name: Rstudio teaching bin
+  template: 
+    src: 'rstudio_teaching.j2' 
+    dest: '{{ansible_env.HOME}}/bin/rstudio_teaching' 
+    mode: 0755
+  when: ms_rstudio_install_teaching_shortcut|bool
+    
+- name: Rstudio teaching desktop
+  template: 
+    src: 'rstudio_teaching.desktop.j2' 
+    dest: '{{ansible_env.HOME}}/.local/share/applications/rstudio_teaching.desktop' 
+    mode: 0644
+  when: ms_rstudio_install_teaching_shortcut|bool

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo $1
+conf={{ansible_env.HOME}}/.config/rstudio/rstudio-prefs.json
+pref=$(grep -e font_size_points $conf | xargs | sed s/,//g | rev | cut -d' ' -f1 | rev)
+sed -i -e "s/\"font_size_points\".*$/\"font_size_points\" : 24,/g" $conf
+/usr/lib/rstudio/bin/rstudio --no-sandbox "$1"
+sed -i -e "s/\"font_size_points\".*$/\"font_size_points\" : $pref,/g" $conf

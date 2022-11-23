@@ -1,18 +1,18 @@
 # tasks file
 ---
-- name: include variables
-  include_vars: "{{ item }}"
-  with_first_found:
-    - "_{{ ansible_distribution_release }}.yml"
-    - "_{{ ansible_distribution | lower }}.yml"
-    - _default.yml
-  tags:
-    - configuration
-    - rstudio
-    - rstudio-include-variables
 
-- include: install.yml
+- import_tasks: "{{ role_path }}/tasks/setup_install.yml"
+  when: ms_rstudio_enabled|bool
   tags:
-    - configuration
-    - rstudio
-    - rstudio-install
+    - setup-all
+    - setup-ms-rstudio
+    - setup-ms-develall
+
+- import_tasks: "{{ role_path }}/tasks/setup_uninstall.yml"
+  when: not ms_rstudio_enabled|bool
+  tags:
+    - setup-all
+    - setup-ms-rstudio
+    - setup-ms-develall
+
+
